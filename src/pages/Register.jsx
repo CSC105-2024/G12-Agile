@@ -87,7 +87,7 @@ const Register = () => {
               Password
             </label>
             <input
-              type="text"
+              type="password"
               placeholder="********"
               {...register("password", {
                 required: "Password is required",
@@ -103,7 +103,7 @@ const Register = () => {
               Confirm Password
             </label>
             <input 
-              type="text"
+              type="password"
               placeholder="********"
               {...register("confirmPassword", {
                 required: "Please confirm your password",

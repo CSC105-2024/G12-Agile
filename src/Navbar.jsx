@@ -28,7 +28,7 @@ function Navbar() {
           <div className="relative">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="bg-white text-[#6837DE] px-4 py-2 rounded-lg font-bold font-poppins"
+              className="bg-white text-[#432892] px-4 py-2 rounded-lg font-bold font-poppins shadow-2xl"
             >
               Account
             </button>
