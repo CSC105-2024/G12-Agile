@@ -5,7 +5,7 @@ const ProjectList = () => {
 
   return (
     <>
-      <div>Project List Page</div>
+      <div className="text-black">Project List Page</div>
       <Link to="/projectdetail">Go to Project Detail page</Link>
     </>
   );
