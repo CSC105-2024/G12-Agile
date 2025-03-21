@@ -108,7 +108,7 @@ const Register = () => {
               {...register("confirmPassword", {
                 required: "Please confirm your password",
                 validate: (value, formValues) =>
-                  value === formValues.password || "Passwords do not match",
+                  value === formValues.password || "Passwords don't match",
               })}
               className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1  focus:ring-purple-500"
             />

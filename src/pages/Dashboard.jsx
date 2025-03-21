@@ -37,7 +37,7 @@ const Dashboard = () => {
           <div className="bg-white p-4 shadow-md rounded-lg">
             <p className="font-bold font-poppins">Project RoV</p>
             <p className="text-sm text-gray-500 font-poppins">Last update 01-01-2025</p>
-            <span className="text-green-500 font-semibold">● Done</span>
+            <span className="text-[#4CC82D] font-semibold">● Done</span>
           </div>
           <div className="bg-white p-4 shadow-md rounded-lg">
             <p className="font-bold font-poppins">Project Calculator</p>

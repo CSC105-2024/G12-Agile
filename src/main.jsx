@@ -16,31 +16,34 @@ import AccountSetting from './pages/AccountSetting';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navbar />,
+    element: <Login />, 
+  },
+  {
+    path: "/",
+    element: <Navbar />, 
     children: [
       {
-        path: "/dashboard",
+        path: "dashboard",
         element: <Dashboard />,
       },
       {
-        path: "/projectlist",
+        path: "projectlist", 
         element: <ProjectList />,
       },
       {
-        path: "/projectdetail",
+        path: "projectdetail", 
         element: <ProjectDetail />,
       },
       {
-        path: "/activitylog",
+        path: "activitylog", 
         element: <ActivityLog />,
       },
       {
-        path: "/accountsetting",
+        path: "accountsetting", 
         element: <AccountSetting />,
       },
     ],
   },
-
   {
     path: "/login",
     element: <Login />,
@@ -49,8 +52,8 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
- 
 ]);
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
