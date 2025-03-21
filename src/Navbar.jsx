@@ -6,7 +6,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className="flex justify-between items-center bg-gradient-to-r from-[#6837DE] to-purple-700 p-4 text-white">
+      <nav className="flex justify-between items-center bg-gradient-to-r from-[#6837DE] to-purple-600 p-4 text-white">
         {/* Logo (Dashboard) */}
         <Link to="/dashboard" className="text-4xl font-monoton  hover:opacity-80 transition">
           A
