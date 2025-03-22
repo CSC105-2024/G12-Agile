@@ -34,14 +34,14 @@ const AccountSetting = () => {
   };
 
   return (
-    <div className="flex items-center justify-center bg-gray-100 rounded-b-lg">
-      <div className="w-full max-w-6xl bg-white p-10 shadow-lg rounded-lg border border-gray-300 mt-10.5">
+    <div className="flex items-center justify-center rounded-b-lg ">
+      <div className="w-full max-w-6xl bg-white p-10 shadow-lg rounded-lg border border-gray-300 mt-28">
         <div className="w-full text-center mb-5">
           <span className="font-poppins inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-3xl font-bold">
             Account Setting
           </span>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="font-poppins font-semibold text-gray-400 text-sm"> Firstname </label>

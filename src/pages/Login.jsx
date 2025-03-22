@@ -20,9 +20,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen">
       {/*image and form*/}
-      <div className="flex w-[1000px] h-[700px] bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="flex w-[1000px] h-[700px] bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
         
         <div
           className="w-1/2 bg-cover bg-center"
@@ -79,7 +79,7 @@ const Login = () => {
             {/* Login Button */}
             <button
             type="submit"
-            className="w-full bg-[#6837DE] text-white py-2 rounded-lg hover:bg-[#572BC0] transition mb-1"
+            className="w-full bg-[#6837DE] text-white py-2 rounded-lg hover:bg-[#572BC0] transition mb-1 mt-1"
           >
             <div className="font-bold font-poppins text-center">Login</div>
           </button>

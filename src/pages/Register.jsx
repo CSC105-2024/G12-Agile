@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
-
+import bg from "../image/background.png";
 
 const Register = () => {
   
@@ -28,8 +28,8 @@ const Register = () => {
   };
   
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg">
+    <div className="flex min-h-screen items-center justify-center"style={{ backgroundImage: `url(${bg})` }}>
+      <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg border border-gray-300">
         <div className="text-8xl font-bold font-monoton text-[#6837DE] text-center mb-3">
           A
         </div>
@@ -136,13 +136,13 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#6837DE] text-white py-2 rounded-lg hover:bg-[#572BC0] transition"
+            className=" mt-4 w-full bg-[#6837DE] text-white py-2 rounded-lg hover:bg-[#572BC0] transition"
           >
-            <div className="font-bold font-poppins text-center ">Register</div>
+            <div className="font-bold font-poppins text-center">Register</div>
           </button>
         </form>
 
-        <p className="text-center mt-4 text-gray-600">
+        <p className="text-center mt-6 text-gray-600">
           Do you already have an account?{"  "}
           <Link
             to="/login"
