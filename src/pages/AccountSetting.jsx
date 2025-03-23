@@ -50,6 +50,7 @@ const AccountSetting = () => {
                 {...register("firstname", { required: "Firstname is required" })}
                 className="placeholder-gray-400 font-poppins w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
               />
+              {errors.firstname && <p className="text-red-500 text-sm font-poppins">{errors.firstname.message}</p>}
             </div>
             <div>
               <label className="font-poppins font-semibold text-gray-400 text-sm"> Lastname </label>
@@ -58,13 +59,14 @@ const AccountSetting = () => {
                 {...register("lastname", { required: "Lastname is required" })}
                 className="placeholder-gray-400 font-poppins w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
               />
+              {errors.lastname && <p className="text-red-500 text-sm font-poppins">{errors.lastname.message}</p>}
             </div>
           </div>
 
           <div>
             <label className="font-poppins font-semibold text-gray-400 text-sm"> E-mail </label>
             <input
-              type="text"
+              type="email"
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -74,6 +76,7 @@ const AccountSetting = () => {
               })}
               className="placeholder-gray-400 font-poppins w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
+            {errors.email && <p className="text-red-500 text-sm font-poppins">{errors.email.message}</p>}
           </div>
 
           <div>
@@ -81,10 +84,12 @@ const AccountSetting = () => {
             <input
               type="password"
               {...register("password", {
+                required: "Password is required",
                 minLength: { value: 8, message: "Password must be at least 8 characters" },
               })}
               className="placeholder-gray-400 font-poppins w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
+            {errors.password && <p className="text-red-500 text-sm font-poppins">{errors.password.message}</p>}
           </div>
 
           <div>
@@ -92,29 +97,31 @@ const AccountSetting = () => {
             <input 
               type="password"
               {...register("confirmPassword", {
+                required: "Confirm Password is required",
                 validate: (value, formValues) =>
                   value === formValues.password || "Passwords don't match",
               })}
               className="placeholder-gray-400 font-poppins w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
+            {errors.confirmPassword && <p className="text-red-500 text-sm font-poppins">{errors.confirmPassword.message}</p>}
           </div>
 
           <div className="flex justify-center">
-          <button
-            type="submit"
-            className="w-full max-w-sm bg-[#6837DE] text-white py-3 rounded-lg hover:bg-[#572BC0] transition font-bold font-poppins mt-4"
-          >
-            Save
-          </button>
+            <button
+              type="submit"
+              className="w-full max-w-sm bg-[#6837DE] text-white py-3 rounded-lg hover:bg-[#572BC0] transition font-bold font-poppins mt-4"
+            >
+              Save
+            </button>
           </div>
           <div className="flex justify-center">
-          <button
-            type="button"
-            onClick={() => navigate("/dashboard")}
-            className=" w-full max-w-sm border border-gray-400 bg-white text-[#6837DE] py-3 rounded-lg hover:bg-gray-100 transition font-bold font-poppins"
-          >
-            Cancel
-          </button>
+            <button
+              type="button"
+              onClick={() => navigate("/dashboard")}
+              className=" w-full max-w-sm border border-gray-400 bg-white text-[#6837DE] py-3 rounded-lg hover:bg-gray-100 transition font-bold font-poppins"
+            >
+              Cancel
+            </button>
           </div>
         </form>
       </div>
