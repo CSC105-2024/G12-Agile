@@ -27,6 +27,7 @@ const Register = () => {
     console.log("✅ Registered Data:", data);
   };
   
+  
   return (
     <div className="flex min-h-screen items-center justify-center"style={{ backgroundImage: `url(${bg})` }}>
       <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg border border-gray-300">
