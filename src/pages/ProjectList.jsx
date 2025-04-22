@@ -11,15 +11,9 @@ const ProjectList = () => {
           Project List
         </span>
       </div>
-      
-      {/* Search Bar */}
-      <div className=" mt-5 ml-9">
-        <input
-          type="text"
-          placeholder="Search by project name"
-          className=" font-poppins placeholder-gray-300 w-110 h-9 p-3 border border-gray-300 rounded-3xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-        />
-      </div>
+      <Link to="/projectdetail" className="text-xl font-bold px-10">
+      Go to Project Detail Page
+      </Link>
     </div>
   );
 };
