@@ -7,8 +7,8 @@ const Dashboard = () => {
     <div className="min-h-screen flex flex-col ">
       {/* Header */}
       <div className="w-full text-center mt-8">
-        <span className="inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-3xl font-bold">
-          Dashboard
+        <span className="inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-4xl font-extrabold leading-relaxed pt-4 pb-4">
+         Dashboard
         </span>
       </div>
 
@@ -17,13 +17,13 @@ const Dashboard = () => {
         <input
           type="text"
           placeholder="Search by project name"
-          className=" font-poppins placeholder-gray-300 w-110 h-9 p-3 border border-gray-300 rounded-3xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+          className=" font-poppins placeholder-gray-300 w-110 h-9 p-3 border border-gray-300 rounded-3xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm "
         />
       </div>
 
       {/* Recent Project Section */}
-      <div className="mt-6 px-10">
-        <div className="w-full">
+      <div className="mt-6 px-10 overflow-x-auto">  
+        <div className="w-full flex-nowrap min-w-[1800px] ">
           <span className="inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-xl font-bold">
             Recent Project
           </span>
@@ -48,6 +48,7 @@ const Dashboard = () => {
               status: "Done",
               color: "#4CC82D", // สีเขียว
             },
+            
           ].map((project, index) => (
             <div
               key={index}
@@ -75,14 +76,14 @@ const Dashboard = () => {
         </div>
       </div>
       {/* Task Update Section */}
-      <div className="mt-8 px-10">
-        <div className="w-full flex justify-between items-center">
+      <div className="mt-8 px-10 overflow-x-auto">
+        <div className="w-full flex justify-between items-center flex-nowrap min-w-[1800px]">
           <span className="inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-xl font-bold">
             Task Update
           </span>
         </div>
         <div className="grid grid-cols-3 gap-6 mt-6  text-gray-700">
-          <div className="bg-white p-6 shadow-md rounded-xl border border-gray-200 flex flex-col items-start text-left">
+          <div className="bg-white p-6 shadow-md rounded-xl border border-gray-200 flex flex-col items-start text-left ">
             <img
               src={rectangleImg}
               alt="Create Filter"
