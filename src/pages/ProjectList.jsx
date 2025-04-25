@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import ProjectTable from "../components/ProjectTable";
 import Pagination from "../components/Pagination";
 import CreateProjectModal from "../components/CreateProjectModal";
@@ -27,7 +28,6 @@ const ProjectList = () => {
     { name: "Minecraft", description: "Game Development", sprint: "4/4", status: "Completed", pm: "Kuruto", dev: "bardsaipe", startDate: "2024-02-01", endDate: "2025-02-28" },
     { name: "Pokemon", description: "Game Development", sprint: "1/1", status: "In progress", pm: "Ash", dev: "Pikachu", startDate: "2025-01-01", endDate: "2025-01-31" }
   ]);
-
   const [sprints, setSprints] = useState([]);
   const [sprintCount, setSprintCount] = useState(1);
 
@@ -44,15 +44,15 @@ const ProjectList = () => {
   const calculateEndDate = (start, duration) => {
     const startDate = new Date(start);
     if (isNaN(startDate)) return "";
-    let daysToAdd = {
+    const days = {
       "1 week": 7,
       "2 week": 14,
       "3 week": 21,
       "4 week": 28,
-      "1 month": 30
+      "1 month": 30,
     }[duration] || 0;
     const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + daysToAdd);
+    endDate.setDate(startDate.getDate() + days);
     return endDate.toISOString().split("T")[0];
   };
 
@@ -67,15 +67,6 @@ const ProjectList = () => {
     setSprints(newSprints);
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Not started": return "bg-[#D9D9D9] border border-[#A7A7A7] text-[#606060] font-semibold";
-      case "In progress": return "bg-[#FFCC00] border border-[#FFCD06] text-white font-semibold";
-      case "Completed": return "bg-[#4CC82D] border border-[#63D347] text-white font-semibold";
-      default: return "bg-gray-500";
-    }
-  };
-
   const handleEditClick = (project) => {
     setSelectedProject(project);
     setMembers(project.dev ? project.dev.split(",").map((d) => d.trim()) : []);
@@ -83,10 +74,8 @@ const ProjectList = () => {
   };
 
   const handleSaveProject = (updatedProject) => {
-    const updatedProjects = projects.map((p) =>
-      p === selectedProject ? updatedProject : p
-    );
-    setProjects(updatedProjects);
+    const updated = projects.map((p) => (p === selectedProject ? updatedProject : p));
+    setProjects(updated);
   };
 
   const handleDeleteProject = () => {
@@ -94,6 +83,19 @@ const ProjectList = () => {
     setProjects(updated);
     setOpenConfirmDeleteModal(false);
     setOpenModal(false);
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Not started":
+        return "bg-[#D9D9D9] border border-[#A7A7A7] text-[#606060]";
+      case "In progress":
+        return "bg-[#FFCC00] border border-[#FFCD06] text-white";
+      case "Completed":
+        return "bg-[#4CC82D] border border-[#63D347] text-white";
+      default:
+        return "bg-gray-500";
+    }
   };
 
   const filteredProjects = projects.filter((proj) => {
@@ -104,33 +106,34 @@ const ProjectList = () => {
 
   const projectsPerPage = 5;
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
-  const indexOfLastProject = currentPage * projectsPerPage;
-  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
-  const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
+  const indexOfLast = currentPage * projectsPerPage;
+  const indexOfFirst = indexOfLast - projectsPerPage;
+  const currentProjects = filteredProjects.slice(indexOfFirst, indexOfLast);
 
   return (
     <div className="min-h-screen flex flex-col">
       <div className="w-full text-center mt-8">
-        <span className="font-poppins inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-3xl font-bold">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent font-poppins">
           Project List
-        </span>
+        </h1>
       </div>
 
-      <div className="text-gray-600 mt-5 ml-9 flex items-center justify-between pr-9">
+      <div className="flex justify-between items-center px-9 mt-6">
         <input
           type="text"
           placeholder="Search by project name"
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
-          className="font-poppins placeholder-gray-300 w-80 h-9 p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-purple-500 text-sm"
+          className="w-80 border border-gray-300 rounded-xl p-2 text-sm placeholder-gray-400 focus:ring-purple-500 focus:outline-none"
         />
         <button
           onClick={() => setOpenCreateModal(true)}
-          className="font-semibold bg-gradient-to-r from-[#3F2B96] to-[#A044FF] text-white font-poppins px-5 py-2 rounded-xl hover:opacity-90"
+          className="bg-gradient-to-r from-[#3F2B96] to-[#A044FF] text-white px-5 py-2 rounded-xl font-semibold hover:opacity-90"
         >
           + Create Project
         </button>
       </div>
+
       <div className="flex gap-2 mt-4 ml-9">
         {["All", "Not started", "In progress", "Completed"].map((status) => (
           <button
@@ -139,12 +142,11 @@ const ProjectList = () => {
               setFilterStatus(status);
               setCurrentPage(1);
             }}
-            className={`font-semibold font-poppins px-4 py-1 rounded-lg border text-sm transition
-              ${
-                filterStatus === status
-                  ? "bg-[#6837DE] text-white border-[#6837DE]"
-                  : "bg-white border-gray-300 text-gray-600 hover:bg-gray-100"
-              }`}
+            className={`font-poppins text-sm px-4 py-1 rounded-lg border ${
+              filterStatus === status
+                ? "bg-[#6837DE] text-white border-[#6837DE]"
+                : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
+            }`}
           >
             {status}
           </button>
@@ -172,6 +174,8 @@ const ProjectList = () => {
         projects={projects}
         members={members}
         setMembers={setMembers}
+        sprints={sprints}
+        setSprints={setSprints}
         sprintCount={sprintCount}
       />
 
