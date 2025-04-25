@@ -4,7 +4,7 @@ import { useState } from "react";
 const ActivityLog = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // แสดงข้อมูล 5 รายการต่อหน้า
+  const itemsPerPage = 5; 
 
   const activities = [
     {
@@ -57,7 +57,7 @@ const ActivityLog = () => {
     },
   ];
 
-  // คำนวณหน้าปัจจุบัน
+  
   const totalPages = Math.ceil(activities.length / itemsPerPage);
   const displayedActivities = activities.slice(
     (currentPage - 1) * itemsPerPage,
@@ -78,7 +78,7 @@ const ActivityLog = () => {
         </span>
       </div>
 
-      {/* Search Bar - ขนาดเล็กลง */}
+      {/* Search Bar */}
       <div className="mt-5 flex justify-start max-w-screen-xl mx-auto px-8">
         <input
           type="text"
@@ -91,7 +91,7 @@ const ActivityLog = () => {
       <div className="bg-white p-8 shadow-lg rounded-lg mt-6 max-w-screen-xl mx-auto">
         <table className="w-full border-collapse rounded-lg overflow-hidden border border-gray-500">
           <thead>
-            <tr className="bg-gray-200 text-gray-700">
+            <tr className="bg-gray-200 text-gray-500">
               <th className="p-6 text-left font-bold text-gray-700 font-poppins text-lg">
                 Action
               </th>
@@ -109,16 +109,16 @@ const ActivityLog = () => {
           <tbody>
             {displayedActivities.map((activity, index) => (
               <tr key={index} className="border-t">
-                <td className="p-6 font-bold text-gray-600 font-poppins text-lg">
+                <td className="p-6 font-semibold text-gray-500 font-poppins text-lg">
                   {activity.action}
                 </td>
-                <td className="p-6 font-bold text-gray-600 font-poppins text-lg">
+                <td className="p-6 font-semibold text-gray-500 font-poppins text-lg">
                   {activity.task}
                 </td>
-                <td className="p-6 font-bold text-gray-600 font-poppins text-lg">
+                <td className="p-6 font-semibold text-gray-500 font-poppins text-lg">
                   {activity.user}
                 </td>
-                <td className="p-6 font-bold text-gray-600 font-poppins text-lg">
+                <td className="p-6 font-semibold text-gray-500 font-poppins text-lg">
                   {activity.timestamp}
                 </td>
               </tr>
