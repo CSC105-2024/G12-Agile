@@ -34,19 +34,19 @@ const Dashboard = () => {
               name: "Project Agile",
               lastUpdate: "02-03-2025",
               status: "In Progress",
-              color: "#FFCC00",
+              color: "#FFCC00", // สีเหลือง
             },
             {
               name: "Project RoV",
               lastUpdate: "01-01-2025",
               status: "Done",
-              color: "#4CC82D",
+              color: "#4CC82D", // สีเขียว
             },
             {
               name: "Project Calculator",
               lastUpdate: "12-11-2024",
               status: "Done",
-              color: "#4CC82D",
+              color: "#4CC82D", // สีเขียว
             },
           ].map((project, index) => (
             <div
@@ -60,8 +60,11 @@ const Dashboard = () => {
               />
               <div className="flex justify-between w-full items-center">
                 <p className="font-bold font-poppins text-lg">{project.name}</p>
-                <span className={`text-[${project.color}] font-semibold`}>
-                  ● {project.status}
+                <span className="font-bold">
+                  <span style={{ color: project.color, fontSize: "24px" }}>
+                    ●
+                  </span>{" "}
+                  {project.status}
                 </span>
               </div>
               <p className="text-sm text-gray-500 font-poppins">
@@ -71,7 +74,6 @@ const Dashboard = () => {
           ))}
         </div>
       </div>
-
       {/* Task Update Section */}
       <div className="mt-8 px-10">
         <div className="w-full flex justify-between items-center">
