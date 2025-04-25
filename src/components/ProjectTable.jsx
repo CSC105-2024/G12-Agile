@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import EditIcon from "../image/edit-246.png";
 
 const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
@@ -33,9 +34,13 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
               return (
                 <tr key={index} className="hover:bg-gray-50 transition">
                   <td className="px-4 py-4 font-poppins">
-                    <div className="text-purple-700 hover:underline cursor-pointer text-base font-semibold">
+                    <Link
+                      to={`/projectdetail?name=${encodeURIComponent(proj.name)}`}
+                      className="text-purple-700 hover:underline cursor-pointer text-base font-semibold"
+                    >
                       {proj.name}
-                    </div>
+                    </Link>
+
                     <div className="text-md text-gray-600">{proj.description}</div>
                     <div className="text-md text-gray-600 mt-1">
                       <span className="font-poppins">PM:</span> {proj.pm}
@@ -76,5 +81,4 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
     </div>
   );
 };
-
 export default ProjectTable;
