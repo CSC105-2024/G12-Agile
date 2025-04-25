@@ -30,7 +30,7 @@ const ProjectList = () => {
   const [sprintCount, setSprintCount] = useState(0);
 
   const addSprintRow = () => {
-    setSprints([...sprints, { start: "", end: "", points: "", duration: "1 month" }]);
+    setSprints([...sprints, { start: "", end: "", points: "", duration: "2 week" }]);
   };
 
   const deleteSprintRow = (index) => {
