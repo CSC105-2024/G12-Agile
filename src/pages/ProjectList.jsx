@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import ProjectTable from "../components/ProjectTable";
 import Pagination from "../components/Pagination";
 import CreateProjectModal from "../components/CreateProjectModal";
@@ -19,7 +18,6 @@ const ProjectList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterText, setFilterText] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
-
   const [projects, setProjects] = useState([
     { name: "Agile", description: "Project Management Website", sprint: "1/4", status: "Not started", pm: "Sorasit", dev: "Veerachai, Poowarin", startDate: "2025-04-01", endDate: "2025-04-15" },
     { name: "Calculator", description: "Calculator Application", sprint: "2/4", status: "In progress", pm: "Veerachai", dev: "Sorasit", startDate: "2025-04-10", endDate: "2025-04-30" },
@@ -29,7 +27,7 @@ const ProjectList = () => {
     { name: "Pokemon", description: "Game Development", sprint: "1/1", status: "In progress", pm: "Ash", dev: "Pikachu", startDate: "2025-01-01", endDate: "2025-01-31" }
   ]);
   const [sprints, setSprints] = useState([]);
-  const [sprintCount, setSprintCount] = useState(1);
+  const [sprintCount, setSprintCount] = useState(0);
 
   const addSprintRow = () => {
     setSprints([...sprints, { start: "", end: "", points: "", duration: "1 month" }]);
@@ -168,6 +166,7 @@ const ProjectList = () => {
       <CreateProjectModal
         open={openCreateModal}
         onClose={() => setOpenCreateModal(false)}
+        setOpenCreateProjectModal={setOpenCreateModal}
         setOpenMemberModal={setOpenMemberModal}
         setOpenCreateSprintModal={setOpenCreateSprintModal}
         setProjects={setProjects}
@@ -175,8 +174,9 @@ const ProjectList = () => {
         members={members}
         setMembers={setMembers}
         sprints={sprints}
-        setSprints={setSprints}
         sprintCount={sprintCount}
+        setSprints={setSprints}
+        setSprintCount={setSprintCount}
       />
 
       <EditProjectModal

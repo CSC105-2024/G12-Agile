@@ -11,16 +11,26 @@ const SprintModal = ({
   onUpdateSprintCount,
 }) => {
   const [errors, setErrors] = useState([]);
+  const [NoSprintError, setNoSprintError] = useState("");
 
   useEffect(() => {
     if (open) {
       setErrors([]);
+      setNoSprintError("");
     }
   }, [open]);
 
   if (!open) return null;
 
   const validate = () => {
+    let valid = true;
+    setNoSprintError("");
+
+    if (sprints.length === 0) {
+      setNoSprintError("At least one sprint is required.");
+      return false;
+    }
+
     const newErrors = sprints.map((sprint) => {
       const sprintError = {};
       if (!sprint.start) sprintError.start = "Start date is required";
@@ -30,11 +40,13 @@ const SprintModal = ({
     });
 
     setErrors(newErrors);
-    return newErrors.every((err) => Object.keys(err).length === 0);
+    valid = newErrors.every((err) => Object.keys(err).length === 0);
+    return valid;
   };
 
   const handleSave = () => {
     if (validate()) {
+      onUpdateSprintCount(sprints.length);
       onClose();
     }
   };
@@ -62,6 +74,10 @@ const SprintModal = ({
         <h2 className="text-2xl font-bold text-center font-poppins bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent mb-6">
           Create Sprint
         </h2>
+
+        {NoSprintError && (
+          <div className="text-red-500 text-sm mb-3">{NoSprintError}</div>
+        )}
 
         <table className="w-full text-sm font-poppins text-gray-600 mb-4 border rounded-lg overflow-hidden">
           <thead className="bg-gray-100 text-left">

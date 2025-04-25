@@ -12,6 +12,8 @@ const CreateProjectModal = ({
   members,
   setMembers,
   sprintCount,
+  setSprints,
+  setSprintCount,
 }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -31,6 +33,15 @@ const CreateProjectModal = ({
   }, [open, setMembers]);
 
   if (!open) return null;
+
+  const handleClose = () => {
+    setErrors({});
+    setMembers([]);
+    setSprints([]);
+    setSprintCount(0);
+    onClose();
+    setOpenCreateProjectModal(false);
+  };
 
   const validate = () => {
     const newErrors = {};
@@ -76,8 +87,7 @@ const CreateProjectModal = ({
       allowOutsideClick: true,
       allowEscapeKey: true,
     }).then(() => {
-      onClose();
-      setOpenCreateProjectModal(false);
+      handleClose();
     });
   };
 
@@ -85,7 +95,7 @@ const CreateProjectModal = ({
     <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
       <div className="bg-white p-8 rounded-2xl w-[600px] shadow-2xl relative">
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
         >
           &times;
@@ -100,10 +110,14 @@ const CreateProjectModal = ({
               type="text"
               placeholder="Enter name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
-            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+            )}
           </div>
           <div>
             <label className="font-semibold block mb-1">Project description</label>
@@ -111,7 +125,9 @@ const CreateProjectModal = ({
               rows={3}
               placeholder="Enter description"
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
               className="w-full border border-gray-300 rounded-md p-2 resize-none focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
             {errors.description && (
@@ -124,7 +140,9 @@ const CreateProjectModal = ({
               <input
                 type="date"
                 value={formData.startDate}
-                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, startDate: e.target.value })
+                }
                 className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-purple-500"
               />
               {errors.startDate && (
@@ -136,7 +154,9 @@ const CreateProjectModal = ({
               <input
                 type="date"
                 value={formData.endDate}
-                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, endDate: e.target.value })
+                }
                 className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-purple-500"
               />
               {errors.endDate && (
@@ -161,8 +181,12 @@ const CreateProjectModal = ({
               <span className="text-lg">+</span> Sprints
             </button>
           </div>
-          {errors.members && <p className="text-red-500 text-sm mt-1">{errors.members}</p>}
-          {errors.sprints && <p className="text-red-500 text-sm mt-1">{errors.sprints}</p>}
+          {(errors.members || errors.sprints) && (
+            <div className="text-red-500 text-sm mt-1 space-x-2">
+              {errors.members && <span>{errors.members}</span>}
+              {errors.sprints && <span>{errors.sprints}</span>}
+            </div>
+          )}
         </div>
         <div className="mt-6 flex justify-end gap-3">
           <button
@@ -172,11 +196,7 @@ const CreateProjectModal = ({
             Save
           </button>
           <button
-            onClick={() => {
-              setErrors({});
-              onClose();
-              setOpenCreateProjectModal(false);
-            }}
+            onClick={handleClose}
             className="border border-[#BBB4B4] font-semibold text-[#6838DE] hover:bg-gray-100 font-poppins px-8 py-1 rounded-xl shadow"
           >
             Cancel
