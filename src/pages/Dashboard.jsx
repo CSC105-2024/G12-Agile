@@ -1,74 +1,141 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import rectangleImg from "../image/Rectangle 9637.png";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const projects = [
+    {
+      name: "Project Agile",
+      lastUpdate: "02-03-2025",
+      status: "In Progress",
+      color: "#FFCC00",
+    },
+    {
+      name: "Project RoV",
+      lastUpdate: "01-01-2025",
+      status: "Done",
+      color: "#4CC82D",
+    },
+    {
+      name: "Project Calculator",
+      lastUpdate: "12-11-2024",
+      status: "Done",
+      color: "#4CC82D",
+    },
+  ];
+
+  const filteredProjects = projects.filter((project) =>
+    project.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen flex flex-col ">
       {/* Header */}
       <div className="w-full text-center mt-8">
-        <span className="inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-3xl font-bold">
+        <span className="inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-4xl font-extrabold leading-relaxed pt-4 pb-4">
           Dashboard
         </span>
       </div>
-      
+
       {/* Search Bar */}
-      <div className=" mt-5 ml-9">
+      <div className="mt-5 ml-9">
         <input
           type="text"
           placeholder="Search by project name"
-          className=" font-poppins placeholder-gray-300 w-110 h-9 p-3 border border-gray-300 rounded-3xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+          className="font-poppins placeholder-gray-300 w-110 h-9 p-3 border border-gray-300 rounded-3xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      
+
       {/* Recent Project Section */}
-      <div className="mt-6 px-10">
-      <div className="w-full">
-        <span className="inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-xl font-bold">
-          Recent Project
-        </span>
-      </div>
-        <div className="grid grid-cols-3 gap-4 mt-4 text-gray-700 ">
-          <div className="bg-white p-4 shadow-md rounded-lg border border-gray-200">
-            <p className="font-bold font-poppins">Project Agile</p>
-            <p className="text-sm text-gray-500 font-poppins">Last update 02-03-2025</p>
-            <span className="text-[#FFCC00] font-semibold">● In Progress</span>
-          </div>
-          <div className="bg-white p-4 shadow-md rounded-lg border border-gray-200">
-            <p className="font-bold font-poppins">Project RoV</p>
-            <p className="text-sm text-gray-500 font-poppins">Last update 01-01-2025</p>
-            <span className="text-[#4CC82D] font-semibold">● Done</span>
-          </div>
-          <div className="bg-white p-4 shadow-md rounded-lg border border-gray-200">
-            <p className="font-bold font-poppins">Project Calculator</p>
-            <p className="text-sm text-gray-500 font-poppins">Last update 12-11-2024</p>
-            <span className="text-[#4CC82D] font-semibold">● Done</span>
-          </div>
+      <div className="mt-6 px-10 overflow-x-auto">
+        <div className="w-full flex-nowrap min-w-[1800px]">
+          <span className="inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-xl font-bold font-poppins">
+            Recent Project
+          </span>
+        </div>
+        <div className="grid grid-cols-3 gap-6 mt-6 text-gray-700 font-poppins">
+          {filteredProjects.map((project, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 shadow-md rounded-xl border border-gray-200 flex flex-col items-start text-left"
+            >
+              <img
+                src={rectangleImg}
+                alt={project.name}
+                className="w-full h-48 rounded-xl mb-4 object-cover"
+              />
+              <div className="flex justify-between w-full items-center">
+                <p className="font-bold font-poppins text-lg">{project.name}</p>
+                <span className="font-bold">
+                  <span style={{ color: project.color, fontSize: "24px" }}>
+                    ●
+                  </span>{" "}
+                  {project.status}
+                </span>
+              </div>
+              <p className="text-sm text-gray-500 font-poppins">
+                Last update {project.lastUpdate}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
-      
+
       {/* Task Update Section */}
-      <div className="mt-8 px-10">
-      <div className="w-full">
-        <span className="inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-xl font-bold">
-          Task Update
-        </span>
-      </div>
-        <div className="grid grid-cols-3 gap-4 mt-4 text-gray-700">
-          <div className="bg-white p-4 shadow-md rounded-lg border border-gray-200">
-            <p className="font-bold font-poppins">Create Filter</p>
-            <span className="text-gray-600 font-semibold font-poppins">Project: Agile, Sprint: 3</span>
-            <p className="text-sm text-gray-500 font-poppins">Update 05-03-2025</p>
+      <div className="mt-8 px-10 overflow-x-auto">
+        <div className="w-full flex justify-between items-center flex-nowrap min-w-[1800px]">
+          <span className="inline-block bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent text-xl font-bold font-poppins">
+            Task Update
+          </span>
+        </div>
+        <div className="grid grid-cols-3 gap-6 mt-6 text-gray-700">
+          {/* Task items (คงเดิม) */}
+          <div className="bg-white p-6 shadow-md rounded-xl border border-gray-200 flex flex-col items-start text-left ">
+            <img
+              src={rectangleImg}
+              alt="Create Filter"
+              className="w-full h-48 rounded-xl mb-4 object-cover"
+            />
+            <div className="flex justify-between w-full items-center">
+              <p className="font-bold font-poppins text-lg flex-1">
+                Create Filter
+              </p>
+              <div className="flex flex-col items-end justify-center h-12">
+                <p className="font-bold text-lg font-poppins">Project: Agile</p>
+                <span className="font-bold text-lg text-gray-600">
+                  Sprint: 3
+                </span>
+              </div>
+            </div>
+            <p className="text-sm text-gray-500 font-poppins">
+              Update 05-03-2025
+            </p>
           </div>
-          <div className="bg-white p-4 shadow-md rounded-lg border border-gray-200">
-            <p className="font-bold font-poppins">Profile Management</p>
-            <span className="text-gray-600 font-semibold font-poppins">Project: Agile, Sprint: 1</span>
-            <p className="text-sm text-gray-500 font-poppins">Update 01-03-2025</p>
-          </div>
-          <div className="bg-white p-4 shadow-md rounded-lg border border-gray-200">
-            <p className="font-bold font-poppins">Change Status</p>
-            <span className="text-gray-600 font-semibold font-poppins">Project: Agile, Sprint: 1</span>
-            <p className="text-sm text-gray-500 font-poppins">Update 05-03-2025</p>
+          <div className="bg-white p-6 shadow-md rounded-xl border border-gray-200 flex flex-col items-start text-left">
+            <img
+              src={rectangleImg}
+              alt="Profile Management"
+              className="w-full h-48 rounded-xl mb-4 object-cover"
+            />
+            <div className="flex justify-between w-full items-center">
+              <p className="font-bold font-poppins text-lg flex-1">
+                Profile Management
+              </p>
+              <div className="flex flex-col items-end justify-center h-12">
+                <p className="font-bold text-lg font-poppins">Project: Agile</p>
+                <span className="font-bold text-lg text-gray-600 font-poppins">
+                  Sprint: 1
+                </span>
+              </div>
+            </div>
+            <p className="text-sm text-gray-500 font-poppins">
+              Update 01-03-2025
+            </p>
           </div>
         </div>
       </div>
