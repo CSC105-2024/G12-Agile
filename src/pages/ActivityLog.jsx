@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const ActivityLog = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7;
+  const itemsPerPage = 10;
   const [searchTerm, setSearchTerm] = useState("");
 
   const activities = [
@@ -48,7 +48,7 @@ const ActivityLog = () => {
         <input
           type="text"
           placeholder="Search by task name, action, or user"
-          className="font-poppins placeholder-gray-300 w-80 sm:w-96 h-10 p-3 border border-gray-300 rounded-3xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+          className="font-poppins placeholder-gray-300 w-80 sm:w-96 h-10 p-3 border border-gray-300 rounded-3xl shadow-sm focus:outline-none focus:ring-1 focus:ring-purple-500 text-sm"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

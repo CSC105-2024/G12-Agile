@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom"; 
 import ProjectTable from "../components/ProjectTable";
 import Pagination from "../components/Pagination";
 import CreateProjectModal from "../components/CreateProjectModal";
@@ -173,28 +174,26 @@ const ProjectList = () => {
 
   return (
     <div className="min-h-screen flex flex-col px-4 md:px-9">
-      <div className="w-full text-center mt-8">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent font-poppins">
-          Project List
-        </h1>
+      <div className="text-md text-gray-400 mt-8 font-poppins">
+        <Link to="/dashboard" className="hover:underline text-gray-400">Dashboard</Link> {" > "}
+        <span className="text-[#6837DE] font-poppins">Project List</span>
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center px-9 mt-6 gap-4">
-  <input
-    type="text"
-    placeholder="Search by project name"
-    value={filterText}
-    onChange={(e) => setFilterText(e.target.value)}
-    className="w-full md:w-80 border border-gray-300 rounded-xl p-2 text-sm placeholder-gray-400 focus:ring-purple-500 focus:outline-none"
-  />
-  <button
-    onClick={() => setOpenCreateModal(true)}
-    className="w-full md:w-auto bg-gradient-to-r from-[#3F2B96] to-[#A044FF] text-white px-5 py-2 rounded-xl font-semibold hover:opacity-90"
-  >
-    + Create Project
-  </button>
-</div>
-
+        <input
+          type="text"
+          placeholder="Search by project name"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          className="w-full md:w-80 border border-gray-300 rounded-xl p-2 text-sm placeholder-gray-400 focus:ring-1 focus:ring-purple-500 focus:outline-none"
+        />
+        <button
+          onClick={() => setOpenCreateModal(true)}
+          className="w-full md:w-auto bg-gradient-to-r from-[#3F2B96] to-[#A044FF] text-white px-5 py-2 rounded-xl font-semibold hover:opacity-90"
+        >
+          + Create Project
+        </button>
+      </div>
 
       <div className="flex gap-2 mt-4 ml-9">
         {["All", "Not started", "In progress", "Completed"].map((status) => (

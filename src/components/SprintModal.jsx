@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ChevronDown, X } from "lucide-react";
 
 const SprintModal = ({
   open,
@@ -115,7 +116,7 @@ const SprintModal = ({
                 <td className="p-2">
                   <input
                     type="number"
-                    className="border border-gray-300 rounded px-2 py-1 w-35"
+                    className="border border-gray-300 rounded px-2 py-1 w-35 focus:outline-none focus:ring-1 focus:ring-purple-500"
                     value={sprint.points}
                     onChange={(e) => handleSprintChange(index, "points", e.target.value)}
                   />
@@ -125,7 +126,7 @@ const SprintModal = ({
                 </td>
                 <td className="p-2 flex items-center gap-2">
                   <select
-                    className="border border-gray-300 rounded px-2 py-1 w-full bg-gray-100"
+                    className="border border-gray-300 rounded px-2 py-1 w-full bg-gray-100 appearance-none focus:outline-none focus:ring-1 focus:ring-purple-500"
                     value={sprint.duration}
                     onChange={(e) => handleSprintChange(index, "duration", e.target.value)}
                   >
@@ -159,7 +160,7 @@ const SprintModal = ({
 
         <div className="mt-4 flex justify-center gap-4">
           <button
-            className="font-semibold border border-[#7825D1] bg-[#7947F5] text-white px-8 py-1 rounded-lg shadow"
+            className="font-semibold border border-[#7825D1] bg-[#7947F5] text-white px-8 py-1 rounded-lg shadow hover:opacity-90"
             onClick={handleSave}
           >
             Save

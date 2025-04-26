@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import EditIcon from "../image/edit-246.png";
 
 const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
@@ -15,6 +15,12 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
     } else {
       return { text: `Overdue by ${Math.abs(dayDiff)} days`, color: "text-red-500" };
     }
+  };
+
+  const navigate = useNavigate();
+
+  const handleProjectClick = (project) => {
+    navigate('/projectdetail', { state: { from: 'projectlist', projectName: project.name } });
   };
 
   return (
@@ -34,12 +40,12 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
               return (
                 <tr key={index} className="hover:bg-gray-50 transition">
                   <td className="px-4 py-4 font-poppins">
-                    <Link
-                      to={`/projectdetail?name=${encodeURIComponent(proj.name)}`}
-                      className="text-purple-700 hover:underline cursor-pointer text-base font-semibold"
+                    <button
+                      onClick={() => handleProjectClick(proj)}
+                      className="text-purple-700 hover:underline cursor-pointer text-base font-semibold bg-transparent p-0"
                     >
                       {proj.name}
-                    </Link>
+                    </button>
                     <div className="text-md text-gray-600">{proj.description}</div>
                     <div className="text-md text-gray-600 mt-1">
                       <span className="font-poppins">PM:</span> {proj.pm}
@@ -65,22 +71,14 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
                         onClick={() => handleEditClick(proj)}
                         className="hover:scale-110 transition-transform"
                       >
-                        <img
-                          src={EditIcon}
-                          alt="Edit"
-                          className="w-8 h-8"
-                        />
+                        <img src={EditIcon} alt="Edit" className="w-8 h-8" />
                       </button>
                     </div>
                     <button
                       onClick={() => handleEditClick(proj)}
                       className="hidden md:block absolute right-8 md:right-3 lg:right-5 xl:right-18 top-1/2 -translate-y-1/2"
                     >
-                      <img
-                        src={EditIcon}
-                        alt="Edit"
-                        className="w-8 h-8 hover:scale-110 transition-transform"
-                      />
+                      <img src={EditIcon} alt="Edit" className="w-8 h-8 hover:scale-110 transition-transform" />
                     </button>
                   </td>
                 </tr>
