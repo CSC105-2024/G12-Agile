@@ -1,16 +1,29 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import bg from "../image/background.png";
 
 const Register = () => {
-  
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const onSubmit = (data) => {
     if (Object.keys(errors).length > 0) {
       return;
@@ -22,14 +35,21 @@ const Register = () => {
       confirmButtonText: "Continue",
       confirmButtonColor: '#6837DE',
     }).then(() => {
-      navigate("/login"); 
+      navigate("/login");
     });
     console.log("✅ Registered Data:", data);
   };
-  
-  
+
   return (
-    <div className="flex min-h-screen items-center justify-center"style={{ backgroundImage: `url(${bg})` }}>
+    <div
+      className="flex min-h-screen items-center justify-center bg-white"
+      style={{
+        backgroundImage: isMobile ? "none" : `url(${bg})`,
+        backgroundSize: isMobile ? "initial" : "cover",
+        backgroundPosition: isMobile ? "initial" : "center",
+        backgroundRepeat: isMobile ? "initial" : "no-repeat",
+      }}
+    >
       <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg border border-gray-300">
         <div className="text-8xl font-bold font-monoton text-[#6837DE] text-center mb-3">
           A
@@ -46,7 +66,7 @@ const Register = () => {
               type="text"
               placeholder="Firstname"
               {...register("firstname", { required: "Firstname is required" })}
-              className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1  focus:ring-purple-500"
+              className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
             {errors.firstname && <p className="text-red-500 text-sm">{errors.firstname.message}</p>}
           </div>
@@ -59,7 +79,7 @@ const Register = () => {
               type="text"
               placeholder="Lastname"
               {...register("lastname", { required: "Lastname is required" })}
-              className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1  focus:ring-purple-500"
+              className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
             {errors.lastname && <p className="text-red-500 text-sm">{errors.lastname.message}</p>}
           </div>
@@ -78,7 +98,7 @@ const Register = () => {
                   message: "Invalid email address",
                 },
               })}
-              className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1  focus:ring-purple-500"
+              className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
             {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
           </div>
@@ -94,7 +114,7 @@ const Register = () => {
                 required: "Password is required",
                 minLength: { value: 8, message: "Password must be at least 8 characters" },
               })}
-              className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1  focus:ring-purple-500"
+              className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
             {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
@@ -103,7 +123,7 @@ const Register = () => {
             <label className="font-poppins font-semibold text-gray-400 text-sm">
               Confirm Password
             </label>
-            <input 
+            <input
               type="password"
               placeholder="********"
               {...register("confirmPassword", {
@@ -111,17 +131,20 @@ const Register = () => {
                 validate: (value, formValues) =>
                   value === formValues.password || "Passwords don't match",
               })}
-              className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1  focus:ring-purple-500"
+              className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
             {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
-            </div>
+          </div>
 
           <div>
             <label className="font-poppins font-semibold text-gray-400 text-sm">
               Role
             </label>
             <div className="relative">
-              <select {...register("role", { required: "Please select a role" })} className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-gray-700 appearance-none focus:outline-none focus:ring-1 focus:ring-purple-500">
+              <select
+                {...register("role", { required: "Please select a role" })}
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-gray-700 appearance-none focus:outline-none focus:ring-1 focus:ring-purple-500"
+              >
                 <option value="" disabled selected>
                   Select Role
                 </option>
@@ -137,14 +160,14 @@ const Register = () => {
 
           <button
             type="submit"
-            className=" mt-4 w-full bg-[#6837DE] text-white py-2 rounded-lg hover:bg-[#572BC0] transition"
+            className="mt-4 w-full bg-[#6837DE] text-white py-2 rounded-lg hover:bg-[#572BC0] transition"
           >
             <div className="font-bold font-poppins text-center">Register</div>
           </button>
         </form>
 
         <p className="text-center mt-6 text-gray-600">
-          Do you already have an account?{"  "}
+          Do you already have an account?{" "}
           <Link
             to="/login"
             className="text-[#6837DE] font-semibold hover:underline underline"
@@ -156,4 +179,5 @@ const Register = () => {
     </div>
   );
 };
+
 export default Register;
