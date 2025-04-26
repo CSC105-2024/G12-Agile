@@ -284,7 +284,7 @@ function ProjectDetail() {
                   <td className="px-4 py-3 font-semibold text-[#606060]">
                     {task.assignee}
                   </td>
-                  <td className="px-4 py-3 font-semibold">
+                  <td className="px-4 py-3 font-semibold whitespace-nowrap">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-semibold ${
                         task.status === "Completed"

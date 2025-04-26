@@ -178,6 +178,7 @@ const ProjectList = () => {
         <Link to="/dashboard" className="hover:underline text-gray-400">Dashboard</Link> {" > "}
         <span className="text-[#6837DE] font-poppins">Project List</span>
       </div>
+      <h1 className="font-poppins flex flex-row justify-center items-center mt-4 text-2xl sm:text-4xl font-bold text-center  bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent">Project List</h1>
 
       <div className="flex flex-col md:flex-row justify-between items-center px-9 mt-6 gap-4">
         <input
