@@ -40,7 +40,6 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
                     >
                       {proj.name}
                     </Link>
-
                     <div className="text-md text-gray-600">{proj.description}</div>
                     <div className="text-md text-gray-600 mt-1">
                       <span className="font-poppins">PM:</span> {proj.pm}
@@ -61,9 +60,21 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
                         {proj.status}
                       </span>
                     </div>
+                    <div className="flex justify-center mt-2 md:hidden">
+                      <button
+                        onClick={() => handleEditClick(proj)}
+                        className="hover:scale-110 transition-transform"
+                      >
+                        <img
+                          src={EditIcon}
+                          alt="Edit"
+                          className="w-8 h-8"
+                        />
+                      </button>
+                    </div>
                     <button
                       onClick={() => handleEditClick(proj)}
-                      className="absolute right-8 sm:right-3 md:right-5 lg:right-22 top-1/2 -translate-y-1/2"
+                      className="hidden md:block absolute right-8 md:right-3 lg:right-5 xl:right-18 top-1/2 -translate-y-1/2"
                     >
                       <img
                         src={EditIcon}
@@ -81,4 +92,5 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
     </div>
   );
 };
+
 export default ProjectTable;

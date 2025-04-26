@@ -23,7 +23,9 @@ const EditProjectModal = ({
       setProjectDesc(project.description || "");
       setStartDate(project.startDate || "");
       setEndDate(project.endDate || "");
-      setMembers(project.dev ? project.dev.split(",").map((dev) => dev.trim()) : []);
+      setMembers(
+        project.dev ? project.dev.split(",").map((dev) => dev.trim()) : []
+      );
       setErrors({});
     }
   }, [project, setMembers]);
@@ -38,7 +40,7 @@ const EditProjectModal = ({
       newErrors.dateOrder = "Start date cannot be later than end date";
     }
     if (members.length === 0) newErrors.members = "At least 1 member";
-  
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -63,7 +65,10 @@ const EditProjectModal = ({
   return (
     <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
       <div className="bg-white p-8 rounded-3xl w-[600px] shadow-2xl relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+        >
           &times;
         </button>
         <h2 className="text-2xl font-bold text-center font-poppins bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent mb-6">
@@ -71,48 +76,66 @@ const EditProjectModal = ({
         </h2>
         <div className="space-y-4 font-poppins text-gray-600 text-sm">
           <div>
-            <label className="block mb-1 text-gray-600 font-semibold">Project name</label>
+            <label className="block mb-1 text-gray-600 font-semibold">
+              Project name
+            </label>
             <input
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               type="text"
               className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
-            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+            )}
           </div>
           <div>
-            <label className="block mb-1 text-gray-600 font-semibold">Project description</label>
+            <label className="block mb-1 text-gray-600 font-semibold">
+              Project description
+            </label>
             <textarea
               value={projectDesc}
               onChange={(e) => setProjectDesc(e.target.value)}
               rows={3}
               className="w-full border border-gray-300 rounded-md p-2 resize-none focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
-            {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+            {errors.description && (
+              <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+            )}
           </div>
           <div className="flex gap-4">
             <div className="flex-1">
-              <label className="block mb-1 text-gray-600 font-semibold">Start Date</label>
+              <label className="block mb-1 text-gray-600 font-semibold">
+                Start Date
+              </label>
               <input
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 type="date"
                 className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-purple-500"
               />
-              {errors.startDate && <p className="text-red-500 text-sm mt-1">{errors.startDate}</p>}
+              {errors.startDate && (
+                <p className="text-red-500 text-sm mt-1">{errors.startDate}</p>
+              )}
             </div>
             <div className="flex-1">
-              <label className="block mb-1 text-gray-600 font-semibold">End Date</label>
+              <label className="block mb-1 text-gray-600 font-semibold">
+                End Date
+              </label>
               <input
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 type="date"
                 className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-purple-500"
               />
-              {errors.endDate && <p className="text-red-500 text-sm mt-1">{errors.endDate}</p>}
+              {errors.endDate && (
+                <p className="text-red-500 text-sm mt-1">{errors.endDate}</p>
+              )}
             </div>
           </div>
-          {errors.dateOrder && <p className="text-red-500 text-sm mt-1">{errors.dateOrder}</p>}
+          {errors.dateOrder && (
+            <p className="text-red-500 text-sm mt-1">{errors.dateOrder}</p>
+          )}
         </div>
 
         <div className="flex justify-between mt-8">
@@ -122,9 +145,15 @@ const EditProjectModal = ({
               onClick={() => setOpenMemberModal(true)}
             >
               Members
-              <img src={whiteEdit} alt="Edit Members Icon" className="w-4 h-4" />
+              <img
+                src={whiteEdit}
+                alt="Edit Members Icon"
+                className="w-4 h-4"
+              />
             </button>
-            {errors.members && <p className="text-red-500 text-sm mt-1">{errors.members}</p>}
+            {errors.members && (
+              <p className="text-red-500 text-sm mt-1">{errors.members}</p>
+            )}
             <button
               className="border border-[#FF0B0F] bg-[#FA290E] hover:bg-red-600 text-white font-poppins font-semibold px-5 py-1 rounded-lg"
               onClick={onDelete}
@@ -132,20 +161,21 @@ const EditProjectModal = ({
               Delete
             </button>
           </div>
-          <div className="absolute left-1/2 transform -translate-x-1/2 mt-1 flex flex-col items-center gap-3">
-            <button
-              className="font-semibold border border-[#7825D1] bg-[#7947F5] hover:opacity-90 text-white font-poppins px-15 py-1 rounded-lg"
-              onClick={handleSave}
-            >
-              Save
-            </button>
-            <button
-              onClick={onClose}
-              className="border border-[#BBB4B4] font-semibold text-[#6838DE] hover:bg-gray-100 font-poppins px-15 py-1 rounded-lg"
-            >
-              Cancel
-            </button>
-          </div>
+          <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3">
+  <button
+    className="font-semibold border border-[#7825D1] bg-[#7947F5] hover:opacity-90 text-white font-poppins px-8 py-1 rounded-lg w-36"
+    onClick={handleSave}
+  >
+    Save
+  </button>
+  <button
+    onClick={onClose}
+    className="border border-[#BBB4B4] font-semibold text-[#6838DE] hover:bg-gray-100 font-poppins px-8 py-1 rounded-lg w-36"
+  >
+    Cancel
+  </button>
+</div>
+
         </div>
       </div>
     </div>

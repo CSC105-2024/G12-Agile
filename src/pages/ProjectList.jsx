@@ -109,30 +109,30 @@ const ProjectList = () => {
   const currentProjects = filteredProjects.slice(indexOfFirst, indexOfLast);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col px-4 md:px-9 pb-6">
       <div className="w-full text-center mt-8">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent font-poppins">
           Project List
         </h1>
       </div>
 
-      <div className="flex justify-between items-center px-9 mt-6">
+      <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4">
         <input
           type="text"
           placeholder="Search by project name"
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
-          className="w-80 border border-gray-300 rounded-xl p-2 text-sm placeholder-gray-400 focus:ring-purple-500 focus:outline-none"
+          className="w-full md:w-80 border border-gray-300 rounded-xl p-2 text-sm placeholder-gray-400 focus:ring-purple-500 focus:outline-none"
         />
         <button
           onClick={() => setOpenCreateModal(true)}
-          className="bg-gradient-to-r from-[#3F2B96] to-[#A044FF] text-white px-5 py-2 rounded-xl font-semibold hover:opacity-90"
+          className="w-full md:w-auto bg-gradient-to-r from-[#3F2B96] to-[#A044FF] text-white px-5 py-2 rounded-xl font-semibold hover:opacity-90"
         >
           + Create Project
         </button>
       </div>
 
-      <div className="flex gap-2 mt-4 ml-9">
+      <div className="flex flex-wrap gap-2 mt-4">
         {["All", "Not started", "In progress", "Completed"].map((status) => (
           <button
             key={status}
@@ -151,17 +151,18 @@ const ProjectList = () => {
         ))}
       </div>
 
-      <ProjectTable
-        projects={currentProjects}
-        getStatusColor={getStatusColor}
-        handleEditClick={handleEditClick}
-      />
-
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        setCurrentPage={setCurrentPage}
-      />
+      <div className="flex flex-col grow overflow-y-auto mt-4">
+        <ProjectTable
+          projects={currentProjects}
+          getStatusColor={getStatusColor}
+          handleEditClick={handleEditClick}
+        />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
 
       <CreateProjectModal
         open={openCreateModal}
