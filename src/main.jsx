@@ -12,6 +12,7 @@ import ProjectList from './pages/ProjectList';
 import ProjectDetail from './pages/ProjectDetail';
 import ActivityLog from './pages/ActivityLog';
 import AccountSetting from './pages/AccountSetting';
+import NotFound from './pages/NotFound'; 
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
   {
     path: '/register',
     element: <Register />,
+  },
+  {
+    path: '*',
+    element: <NotFound />, 
   },
 ]);
 
