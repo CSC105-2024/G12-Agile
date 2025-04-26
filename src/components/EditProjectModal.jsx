@@ -155,27 +155,26 @@ const EditProjectModal = ({
               <p className="text-red-500 text-sm mt-1">{errors.members}</p>
             )}
             <button
-              className="border border-[#FF0B0F] bg-[#FA290E] hover:bg-red-600 text-white font-poppins font-semibold px-5 py-1 rounded-lg"
+              className="border border-[#FF0B0F] bg-[#FA290E] hover:bg-red-600 text-white font-poppins font-semibold px-6 py-1 rounded-lg"
               onClick={onDelete}
             >
               Delete
             </button>
           </div>
-          <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3">
-  <button
-    className="font-semibold border border-[#7825D1] bg-[#7947F5] hover:opacity-90 text-white font-poppins px-8 py-1 rounded-lg w-36"
-    onClick={handleSave}
-  >
-    Save
-  </button>
-  <button
-    onClick={onClose}
-    className="border border-[#BBB4B4] font-semibold text-[#6838DE] hover:bg-gray-100 font-poppins px-8 py-1 rounded-lg w-36"
-  >
-    Cancel
-  </button>
-</div>
-
+          <div className="mt-10 flex flex-row justify-center gap-3">
+            <button
+              className="font-semibold border border-[#7825D1] bg-[#7947F5] hover:opacity-90 text-white font-poppins px-6 py-1 rounded-lg w-27 h-9 shadow"
+              onClick={handleSave}
+            >
+              Save
+            </button>
+            <button
+              onClick={onClose}
+              className="border border-[#BBB4B4] font-semibold text-[#6838DE] hover:bg-gray-100 font-poppins px-6 py-2 rounded-lg w-27 h-9 shadow"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>

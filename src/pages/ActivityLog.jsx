@@ -79,7 +79,7 @@ const ActivityLog = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex flex-wrap justify-center items-center mt-8 space-x-2">
+      <div className="flex flex-wrap justify-center items-center mt-5 space-x-2">
         <button
           onClick={() => changePage(currentPage - 1)}
           className={`px-4 py-1 border border-gray-300 rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : " hover:bg-gray-300"}`}
