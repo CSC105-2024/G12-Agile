@@ -1,13 +1,13 @@
 import { verifyToken } from "../utils/jwt.ts";
+import { getCookie } from "hono/cookie";
 import type { MiddlewareHandler } from "hono";
 
 const authMiddleware: MiddlewareHandler = async (c, next) => {
-  const authHeader = c.req.header("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  const token = getCookie(c, "token");
+  if (!token) {
     return c.json({ error: "Unauthorized" }, 401);
   }
 
-  const token = authHeader.replace("Bearer ", "");
   try {
     const decoded = verifyToken(token);
     c.set("user", decoded);

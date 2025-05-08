@@ -27,7 +27,7 @@ model Project {
   description String
   startDate   DateTime
   endDate     DateTime
-  status      ProjectStatus
+  status      ProjectStatus @default(NotStarted)
   pmId        Int      
   pm          User      @relation("ProjectPM", fields: [pmId], references: [id])
   members     ProjectMember[]
@@ -47,15 +47,18 @@ model ProjectMember {
 model Sprint {
   id              Int       @id @default(autoincrement())  
   project         Project   @relation(fields: [projectId], references: [id])
-  projectId       Int     
-  name            String
+  projectId       Int
+  index           Int      
   startDate       DateTime
   endDate         DateTime
   duration        String
   expectedPoints  Int
   achievedPoints  Int      @default(0)
   tasks           Task[]
+
+  @@unique([projectId, index])
 }
+
 
 model Task {
   id          Int       @id @default(autoincrement())
@@ -65,8 +68,8 @@ model Task {
   description String?
   point       Int
   status      TaskStatus
-  assignee    User      @relation("TaskAssignee", fields: [assigneeId], references: [id])
-  assigneeId  Int   
+  assignee    User?      @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  assigneeId  Int?  
 }
 
 model ActivityLog {

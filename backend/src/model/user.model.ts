@@ -1,6 +1,7 @@
-import { PrismaClient, Role, } from '@prisma/client';
+import { PrismaClient, Role } from "@prisma/client";
 
 const prisma = new PrismaClient();
+
 const createUser = async (data: {
   firstname: string;
   lastname: string;
@@ -10,9 +11,8 @@ const createUser = async (data: {
 }) => {
   const roleEnum = data.role as Role;
   if (!Object.values(Role).includes(roleEnum)) {
-    throw new Error('Invalid role');
+    throw new Error("Invalid role");
   }
-
   return prisma.user.create({
     data: {
       firstname: data.firstname,
@@ -24,30 +24,15 @@ const createUser = async (data: {
   });
 };
 
-const findUsers = async () => {
-  return prisma.user.findMany();
-};
-
-const findUserById = async (id: number) => {
-  return prisma.user.findUnique({
-    where: { id },
-  });
-};
+const findUsers = async () => prisma.user.findMany();
+const findUserById = async (id: number) => prisma.user.findUnique({ where: { id } });
+const findUserByEmail = async (email: string) => prisma.user.findUnique({ where: { email } });
 
 const updateUser = async (
   id: number,
-  data: { firstname?: string; lastname?: string; email?: string; password?: string }
-) => {
-  return prisma.user.update({
-    where: { id },
-    data,
-  });
-};
+  data: Partial<{ firstname: string; lastname: string; email: string; password: string }>
+) => prisma.user.update({ where: { id }, data });
 
-const removeUser = async (id: number) => {
-  return prisma.user.delete({
-    where: { id },
-  });
-};
+const removeUser = async (id: number) => prisma.user.delete({ where: { id } });
 
-export { createUser, findUsers, findUserById, updateUser, removeUser };
+export { createUser, findUsers, findUserById, findUserByEmail, updateUser, removeUser };
