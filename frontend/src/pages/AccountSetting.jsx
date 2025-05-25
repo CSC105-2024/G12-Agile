@@ -1,37 +1,68 @@
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { userApi } from "../api/userApi";
 
 const AccountSetting = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
   const {
     register,
     handleSubmit,
+    setValue,
+    getValues,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      firstname: "Sorasit",
-      lastname: "Laiget",
-      email: "SorasitLaiget@gmail.com",
-      password: "12345678",
-      confirmPassword: "12345678",
-    },
-  });
+  } = useForm();
 
-  const onSubmit = (data) => {
-    Swal.fire({
-      title: "Account Updated!",
-      text: "Your account details have been updated successfully.",
-      icon: "success",
-      confirmButtonText: "OK",
-      confirmButtonColor: "#6837DE",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate("/dashboard"); 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await userApi.getCurrentUser();
+        const user = res.data;
+
+        setValue("firstname", user.firstname);
+        setValue("lastname", user.lastname);
+        setValue("email", user.email);
+
+        setLoading(false);
+      } catch (err) {
+        console.error("Failed to load user:", err);
+        Swal.fire("Error", "Failed to load user data", "error");
       }
-    });
-    console.log("✅ Updated Data:", data);
+    };
+
+    fetchUser();
+  }, [setValue]);
+
+  const onSubmit = async (data) => {
+    try {
+      const res = await userApi.getCurrentUser();
+      const userId = res.data.id;
+
+      const updatePayload = {
+        firstname: data.firstname,
+        lastname: data.lastname,
+        email: data.email,
+      };
+
+      if (data.password) {
+        updatePayload.password = data.password;
+      }
+
+      await userApi.update(userId, updatePayload);
+
+      Swal.fire("Account Updated!", "Your account details have been updated successfully.", "success").then(() => {
+        navigate("/dashboard");
+      });
+    } catch (err) {
+      console.error("Update failed:", err);
+      Swal.fire("Error", "Failed to update profile", "error");
+    }
   };
+
+  if (loading) return <div className="text-center mt-32">Loading...</div>;
 
   return (
     <div className="flex items-center justify-center rounded-b-lg ">
@@ -80,11 +111,12 @@ const AccountSetting = () => {
           </div>
 
           <div>
-            <label className="font-poppins font-semibold text-gray-400 text-sm"> Password </label>
+            <label className="font-poppins font-semibold text-gray-400 text-sm">
+              New Password (leave blank to keep current)
+            </label>
             <input
               type="password"
               {...register("password", {
-                required: "Password is required",
                 minLength: { value: 8, message: "Password must be at least 8 characters" },
               })}
               className="placeholder-gray-400 font-poppins w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
@@ -94,12 +126,13 @@ const AccountSetting = () => {
 
           <div>
             <label className="font-poppins font-semibold text-gray-400 text-sm"> Confirm Password </label>
-            <input 
+            <input
               type="password"
               {...register("confirmPassword", {
-                required: "Confirm Password is required",
-                validate: (value, formValues) =>
-                  value === formValues.password || "Passwords don't match",
+                validate: (value) => {
+                  const pw = getValues("password");
+                  if (pw && value !== pw) return "Passwords don't match";
+                },
               })}
               className="placeholder-gray-400 font-poppins w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
@@ -118,7 +151,7 @@ const AccountSetting = () => {
             <button
               type="button"
               onClick={() => navigate("/dashboard")}
-              className=" w-full max-w-sm border border-gray-400 bg-white text-[#6837DE] py-3 rounded-lg hover:bg-gray-100 transition font-bold font-poppins"
+              className="w-full max-w-sm border border-gray-400 bg-white text-[#6837DE] py-3 rounded-lg hover:bg-gray-100 transition font-bold font-poppins"
             >
               Cancel
             </button>

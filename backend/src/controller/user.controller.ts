@@ -4,12 +4,24 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/jwt.ts";
 
 const registerUser = async (c: any) => {
-  const { firstname, lastname, email, password, role } = await c.req.json();
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await createUser({ firstname, lastname, email, password: hashedPassword, role });
-  await logActivity(user.id, "User registered");
-  return c.json(user);
+  try {
+    const { firstname, lastname, email, password, role } = await c.req.json();
+
+    const existing = await findUserByEmail(email);
+    if (existing) {
+      return c.json({ error: "Email already exists" }, 400);
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await createUser({ firstname, lastname, email, password: hashedPassword, role });
+    await logActivity(user.id, "User registered");
+    return c.json(user);
+  } catch (err) {
+    console.error("Register Error:", err);
+    return c.json({ error: "Registration failed" }, 500);
+  }
 };
+
+
 
 const loginUser = async (c: any) => {
   const { email, password, rememberMe } = await c.req.json();
@@ -29,6 +41,14 @@ const loginUser = async (c: any) => {
 
   return c.json({ message: "Login successful", token, user });
 };
+
+const getCurrentUser = async (c: any) => {
+  const payload = c.get("user"); 
+  const user = await findUserById(payload.id); 
+  if (!user) return c.json({ error: "User not found" }, 404);
+  return c.json(user); 
+};
+
 
 const logoutUser = async (c: any) => {
   c.header("Set-Cookie", `token=; HttpOnly; Path=/; Max-Age=0`);
@@ -68,6 +88,7 @@ export {
   logoutUser,
   getUsers,
   getUserById,
+  getCurrentUser,
   updateUserController,
-  deleteUserController
+  deleteUserController,
  }

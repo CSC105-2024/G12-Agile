@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import bg from "../image/background.png";
+import { userApi } from "../api/userApi";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const Register = () => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues
   } = useForm();
 
   const [isMobile, setIsMobile] = useState(false);
@@ -24,20 +26,35 @@ const Register = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const onSubmit = (data) => {
-    if (Object.keys(errors).length > 0) {
-      return;
+  const onSubmit = async (data) => {
+    if (Object.keys(errors).length > 0) return;
+
+    try {
+      await userApi.register(data);
+      Swal.fire({
+        title: "Registration Successful!",
+        text: "You have successfully registered.",
+        icon: "success",
+        confirmButtonText: "Continue",
+        confirmButtonColor: '#6837DE',
+      }).then(() => {
+        navigate("/login");
+      });
+    } catch (err) {
+      console.error("Registration failed:", err);
+    
+      const message =
+        err.response?.data?.error === "Email already exists"
+          ? "This email is already registered. Please use another."
+          : "An error occurred. Please try again.";
+    
+      Swal.fire({
+        title: "Registration Failed",
+        text: message,
+        icon: "error",
+      });
     }
-    Swal.fire({
-      title: "Registration Successful!",
-      text: "You have successfully registered.",
-      icon: "success",
-      confirmButtonText: "Continue",
-      confirmButtonColor: '#6837DE',
-    }).then(() => {
-      navigate("/login");
-    });
-    console.log("✅ Registered Data:", data);
+    
   };
 
   return (
@@ -128,8 +145,7 @@ const Register = () => {
               placeholder="********"
               {...register("confirmPassword", {
                 required: "Please confirm your password",
-                validate: (value, formValues) =>
-                  value === formValues.password || "Passwords don't match",
+                validate: (value) => value === getValues("password") || "Passwords don't match",
               })}
               className="placeholder-gray-300 font-poppins w-full px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
             />

@@ -1,29 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import rectangleImg from "../image/Rectangle 9637.png";
+import { userApi } from "../api/userApi";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState("");
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    if (Object.keys(errors).length > 0) {
-      return;
+  const onSubmit = async (data) => {
+    if (Object.keys(errors).length > 0) return;
+
+    try {
+      setLoginError(""); 
+      await userApi.login(data); 
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login failed:", err);
+    
+      if (!err.response) {
+        setLoginError("Cannot connect to server. Please try again later.");
+        return;
+      }
+    
+      const status = err.response.status;
+    
+      if (status === 401 || status === 404) {
+        setLoginError("Email or password is incorrect");
+      } else {
+        const errorMsg = err.response.data?.error || "An unexpected error occurred";
+        setLoginError(errorMsg);
+      }
     }
-    console.log("✅ Logged in Data:", data);
-    navigate("/dashboard");
+    
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white p-8 shadow-lg rounded-lg border border-gray-300">
       {/* image and form */}
       <div className="flex flex-col md:flex-row w-[1000px] h-full md:h-[700px] bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
-        
+
         {/* image */}
         <div
           className="hidden md:block w-full md:w-1/2 h-[250px] md:h-auto bg-cover bg-center"
@@ -56,6 +78,9 @@ const Login = () => {
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
+              {loginError && (
+                <p className="text-red-500 text-sm mt-1">{loginError}</p>
               )}
             </div>
 
