@@ -54,7 +54,8 @@ const EditProjectModal = ({
       description: projectDesc,
       startDate,
       endDate,
-      dev: members.join(", "),
+      dev: members.join(", "), 
+      members,
     };
     onSave(updatedProject);
     onClose();

@@ -36,6 +36,7 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
           </thead>
           <tbody>
             {projects.map((proj, index) => {
+               console.log("Project dev:", proj.dev);
               const { text, color } = getDaysLeft(proj.endDate);
               return (
                 <tr key={index} className="hover:bg-gray-50 transition">
@@ -51,7 +52,7 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
                       <span className="font-poppins">PM:</span> {proj.pm}
                     </div>
                     <div className="text-md text-gray-600">
-                      <span className="font-poppins">Dev:</span> {proj.dev}
+                    <span className="font-poppins">Dev:</span> {proj.dev}
                     </div>
                     <div className={`text-md mt-1 ${color}`}>
                       {text}

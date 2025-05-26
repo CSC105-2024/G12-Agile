@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import { projectApi } from "../api/projectApi";
+import { sprintApi } from "../api/sprintApi";
 
 const CreateProjectModal = ({
   open,
@@ -10,6 +12,7 @@ const CreateProjectModal = ({
   setProjects,
   projects,
   members,
+  sprints,
   setMembers,
   sprintCount,
   setSprints,
@@ -64,31 +67,41 @@ const CreateProjectModal = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validate()) return;
 
-    const newProject = {
-      ...formData,
-      sprint: `0/${sprintCount}`,
-      status: "Not started",
-      pm: "You",
-      dev: members.join(", "),
-    };
+    try {
+      const uniqueMembers = [...new Set(members)];
+      const res = await projectApi.create({
+        name: formData.name,
+        description: formData.description,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        members: uniqueMembers,
+        sprints: sprints,
+      });
 
-    setProjects([...projects, newProject]);
+      const projectId = res.data.projectId;
 
-    Swal.fire({
-      icon: "success",
-      title: "Project Created!",
-      text: "Your project has been successfully created.",
-      confirmButtonText: "Close",
-      confirmButtonColor: "#6837DE",
-      showCloseButton: true,
-      allowOutsideClick: true,
-      allowEscapeKey: true,
-    }).then(() => {
-      handleClose();
-    });
+     
+    
+
+      Swal.fire({
+        icon: "success",
+        title: "Project Created!",
+        text: "Your project has been successfully created.",
+        confirmButtonText: "Close",
+        confirmButtonColor: "#6837DE",
+        showCloseButton: true,
+        allowOutsideClick: true,
+        allowEscapeKey: true,
+      }).then(() => {
+        handleClose();
+      });
+    } catch (err) {
+      console.error("❌ Create project failed:", err);
+      Swal.fire("Error", "Failed to create project", "error");
+    }
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; 
 import ProjectTable from "../components/ProjectTable";
 import Pagination from "../components/Pagination";
@@ -7,6 +7,9 @@ import EditProjectModal from "../components/EditProjectModal";
 import MemberModal from "../components/MemberModal";
 import SprintModal from "../components/SprintModal";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import { userApi } from "../api/userApi";
+import axiosInstance from "../utils/axiosInstance";
+import { projectApi } from "../api/projectApi";
 
 const ProjectList = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -19,76 +22,54 @@ const ProjectList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterText, setFilterText] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
-  const [projects, setProjects] = useState([
-    {
-      name: "Agile",
-      description: "Project Management Website",
-      sprint: "1/4",
-      status: "Not started",
-      pm: "Sorasit",
-      dev: "Veerachai, Poowarin",
-      startDate: "2025-04-01",
-      endDate: "2025-04-15",
-    },
-    {
-      name: "Calculator",
-      description: "Calculator Application",
-      sprint: "2/4",
-      status: "In progress",
-      pm: "Veerachai",
-      dev: "Sorasit",
-      startDate: "2025-04-10",
-      endDate: "2025-04-30",
-    },
-    {
-      name: "ChatGPT",
-      description: "Chat Bot",
-      sprint: "3/4",
-      status: "In progress",
-      pm: "Poowarin",
-      dev: "Sorasit",
-      startDate: "2025-05-01",
-      endDate: "2025-05-15",
-    },
-    {
-      name: "ROV",
-      description: "Game Development",
-      sprint: "4/4",
-      status: "In progress",
-      pm: "Method",
-      dev: "Aokood",
-      startDate: "2025-05-01",
-      endDate: "2025-07-31",
-    },
-    {
-      name: "Minecraft",
-      description: "Game Development",
-      sprint: "4/4",
-      status: "Completed",
-      pm: "Kuruto",
-      dev: "bardsaipe",
-      startDate: "2024-02-01",
-      endDate: "2025-02-28",
-    },
-    {
-      name: "Pokemon",
-      description: "Game Development",
-      sprint: "1/1",
-      status: "In progress",
-      pm: "Ash",
-      dev: "Pikachu",
-      startDate: "2025-01-01",
-      endDate: "2025-01-31",
-    },
-  ]);
+  const [projects, setProjects] = useState([]);
   const [sprints, setSprints] = useState([]);
   const [sprintCount, setSprintCount] = useState(0);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [userRes, projectRes] = await Promise.all([
+          userApi.getCurrentUser(),
+          projectApi.getAll(),
+          axiosInstance.get("/projects")
+        ]);
+
+        const user = userRes.data;
+        const filteredProjects = projectRes.data.filter((proj) => {
+          if (user.role === "PM") return proj.pmId === user.id;
+          if (user.role === "Dev") return proj.members.some((m) => m.userId === user.id);
+          return false;
+        });
+
+        const formattedProjects = filteredProjects.map((proj) => {
+          const today = new Date();
+          const startedSprints = proj.sprints?.filter((sprint) => new Date(sprint.startDate) <= today).length || 0;
+          return {
+            id: proj.id,
+            name: proj.name,
+            description: proj.description,
+            sprint: `${startedSprints}/${proj.sprints.length}`,
+            status: capitalizeWords(proj.status.replace(/([a-z])([A-Z])/g, "$1 $2")),
+            pm: proj.pm?.firstname || "Unknown",
+            dev: proj.members?.map((m) => m.firstname || "No First Name").join(", ") || "No Members",
+            memberEmails: proj.members?.map((m) => (m.user ? m.user.email : "")).filter(Boolean) || [],
+            startDate: proj.startDate.split("T")[0],
+            endDate: proj.endDate.split("T")[0],
+          };
+        });
+
+        setProjects(formattedProjects);
+      } catch (err) {
+        console.error("Failed to fetch projects or user:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const addSprintRow = () => {
-    setSprints([
-      ...sprints,
-      { start: "", end: "", points: "", duration: "2 week" },
-    ]);
+    setSprints([...sprints, { start: "", end: "", points: "", duration: "2 week" }]);
   };
 
   const deleteSprintRow = (index) => {
@@ -100,14 +81,13 @@ const ProjectList = () => {
   const calculateEndDate = (start, duration) => {
     const startDate = new Date(start);
     if (isNaN(startDate)) return "";
-    const days =
-      {
-        "1 week": 7,
-        "2 week": 14,
-        "3 week": 21,
-        "4 week": 28,
-        "1 month": 30,
-      }[duration] || 0;
+    const days = {
+      "1 week": 7,
+      "2 week": 14,
+      "3 week": 21,
+      "4 week": 28,
+      "1 month": 30,
+    }[duration] || 0;
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + days);
     return endDate.toISOString().split("T")[0];
@@ -118,8 +98,7 @@ const ProjectList = () => {
     newSprints[index][field] = value;
     if (field === "start" || field === "duration") {
       const start = field === "start" ? value : newSprints[index].start;
-      const duration =
-        field === "duration" ? value : newSprints[index].duration;
+      const duration = field === "duration" ? value : newSprints[index].duration;
       newSprints[index].end = calculateEndDate(start, duration);
     }
     setSprints(newSprints);
@@ -127,41 +106,72 @@ const ProjectList = () => {
 
   const handleEditClick = (project) => {
     setSelectedProject(project);
-    setMembers(project.dev ? project.dev.split(",").map((d) => d.trim()) : []);
+    setMembers(project.memberEmails || []);
     setOpenModal(true);
   };
 
-  const handleSaveProject = (updatedProject) => {
-    const updated = projects.map((p) =>
-      p === selectedProject ? updatedProject : p
-    );
-    setProjects(updated);
+  const handleSaveProject = async (updatedProject) => {
+    try {
+      if (!updatedProject.id) return console.error("Missing project ID");
+  
+      await projectApi.update(updatedProject.id, {
+        name: updatedProject.name,
+        description: updatedProject.description,
+        startDate: updatedProject.startDate,
+        endDate: updatedProject.endDate,
+        members: updatedProject.members, 
+      });
+  
+      const updatedProjects = projects.map((p) =>
+        p.id === updatedProject.id
+          ? {
+              ...p,
+              name: updatedProject.name,
+              description: updatedProject.description,
+              startDate: updatedProject.startDate,
+              endDate: updatedProject.endDate,
+              dev: updatedProject.members?.join(", ") || p.dev, 
+            }
+          : p
+      );
+  
+      setProjects(updatedProjects);
+    } catch (err) {
+      console.error("Error updating project:", err);
+    }
   };
+  
+  const handleDeleteProject = async () => {
+    try {
+      await projectApi.delete(selectedProject.id);
+      const updated = projects.filter((p) => p.id !== selectedProject.id);
+      setProjects(updated); 
+      setOpenConfirmDeleteModal(false);
+      setOpenModal(false);
+    } catch (err) {
+      console.error("Failed to delete project:", err);
+    }
+  };
+  
 
-  const handleDeleteProject = () => {
-    const updated = projects.filter((p) => p !== selectedProject);
-    setProjects(updated);
-    setOpenConfirmDeleteModal(false);
-    setOpenModal(false);
-  };
+  const capitalizeWords = (str) =>
+    str.toLowerCase().split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
 
   const getStatusColor = (status) => {
-    switch (status) {
-      case "Not started":
+    switch (status.toLowerCase()) {
+      case "not started":
         return "bg-[#D9D9D9] border border-[#A7A7A7] text-[#606060]";
-      case "In progress":
+      case "in progress":
         return "bg-[#FFCC00] border border-[#FFCD06] text-white";
-      case "Completed":
+      case "completed":
         return "bg-[#4CC82D] border border-[#63D347] text-white";
       default:
-        return "bg-gray-500";
+        return "bg-gray-600";
     }
   };
 
   const filteredProjects = projects.filter((proj) => {
-    const matchName = proj.name
-      .toLowerCase()
-      .includes(filterText.toLowerCase());
+    const matchName = proj.name.toLowerCase().includes(filterText.toLowerCase());
     const matchStatus = filterStatus === "All" || proj.status === filterStatus;
     return matchName && matchStatus;
   });
@@ -178,7 +188,7 @@ const ProjectList = () => {
         <Link to="/dashboard" className="hover:underline text-gray-400">Dashboard</Link> {" > "}
         <span className="text-[#6837DE] font-poppins">Project List</span>
       </div>
-      <h1 className="font-poppins flex flex-row justify-center items-center mt-4 text-2xl sm:text-4xl font-bold text-center  bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent">Project List</h1>
+      <h1 className="font-poppins flex flex-row justify-center items-center mt-4 text-2xl sm:text-4xl font-bold text-center bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent">Project List</h1>
 
       <div className="flex flex-col md:flex-row justify-between items-center px-9 mt-6 gap-4">
         <input
@@ -223,11 +233,7 @@ const ProjectList = () => {
         />
       </div>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        setCurrentPage={setCurrentPage}
-      />
+      <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
 
       <CreateProjectModal
         open={openCreateModal}
