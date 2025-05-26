@@ -73,6 +73,12 @@ const updateSprint = async (
 const removeSprint = async (id: number) => {
   return prisma.sprint.delete({ where: { id } });
 };
+const deleteSprintsByProjectId = async (projectId: number) => {
+  return prisma.sprint.deleteMany({
+    where: { projectId },
+  });
+};
+
 
 export {
   createSprint,
@@ -80,6 +86,7 @@ export {
   findSprintsByProjectId,
   updateSprint,
   removeSprint,
-  findSprintByProjectIdAndIndex
+  findSprintByProjectIdAndIndex,
+  deleteSprintsByProjectId
 
 };

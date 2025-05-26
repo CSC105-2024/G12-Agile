@@ -26,7 +26,12 @@ const createUser = async (data: {
 
 const findUsers = async () => prisma.user.findMany();
 const findUserById = async (id: number) => prisma.user.findUnique({ where: { id } });
-const findUserByEmail = async (email: string) => prisma.user.findUnique({ where: { email } });
+const findUserByEmail = async (email: string) => {
+  return prisma.user.findUnique({
+    where: { email },
+    select: { id: true, email: true, firstname: true, lastname: true }  
+  });
+};
 
 const updateUser = async (
   id: number,

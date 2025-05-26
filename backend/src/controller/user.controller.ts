@@ -49,6 +49,14 @@ const getCurrentUser = async (c: any) => {
   return c.json(user); 
 };
 
+const getUserByEmailController = async (c: any) => {
+  const email = c.req.param("email");
+  const user = await findUserByEmail(email);
+  if (!user) return c.json({ error: "Not found" }, 404);
+  return c.json(user);
+};
+
+
 
 const logoutUser = async (c: any) => {
   c.header("Set-Cookie", `token=; HttpOnly; Path=/; Max-Age=0`);
@@ -91,4 +99,5 @@ export {
   getCurrentUser,
   updateUserController,
   deleteUserController,
+  getUserByEmailController,
  }
