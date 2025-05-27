@@ -17,7 +17,7 @@ taskRoute.get("/projects/:projectId", getTasksByProjectId);
 taskRoute.post("/", createTaskController);
 taskRoute.get("/:id", getTaskById);
 taskRoute.patch("/:id", updateTaskController);
-taskRoute.patch("/:id/claim", claimTaskByEmail);
+taskRoute.post("/:id/claim", claimTaskByEmail);
 taskRoute.delete("/:id", deleteTaskController);
 
 export default taskRoute;

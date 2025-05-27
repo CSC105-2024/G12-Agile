@@ -63,7 +63,7 @@ model Sprint {
 
 model Task {
   id          Int       @id @default(autoincrement())
-  sprint      Sprint    @relation(fields: [sprintId], references: [id])
+  sprint      Sprint    @relation(fields: [sprintId], references: [id], onDelete: Cascade)
   sprintId    Int     
   name        String
   description String?
@@ -72,6 +72,7 @@ model Task {
   assignee    User?      @relation("TaskAssignee", fields: [assigneeId], references: [id])
   assigneeId  Int?  
 }
+
 
 model ActivityLog {
   id        Int       @id @default(autoincrement())  

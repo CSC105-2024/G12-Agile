@@ -24,15 +24,16 @@ const findProjectById = async (id: number) => {
               id: true,
               email: true,
               firstname: true,
-              lastname: true
-            }
-          }
-        }
+              lastname: true,
+            },
+          },
+        },
       },
-      sprints: true
-    }
+      sprints: true,
+    },
   });
 };
+
 
 const updateProject = async (
   id: number,

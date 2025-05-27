@@ -46,29 +46,34 @@ const updateTask = async (
 const removeTask = async (id: number) => prisma.task.delete({ where: { id } });
 
 const findTasksByProjectId = async (projectId: number) => {
-    return prisma.task.findMany({
-      where: {
-        sprint: {
-          projectId
+  const tasks = await prisma.task.findMany({
+    where: {
+      sprint: {
+        projectId
+      }
+    },
+    include: {
+      assignee: {
+        select: {
+          id: true,
+          firstname: true,
+          email: true
         }
       },
-      include: {
-        assignee: {
-          select: {
-            id: true,
-            firstname: true,
-            email: true
-          }
-        },
-        sprint: {
-          select: {
-            id: true,
-            index: true
-          }
+      sprint: {
+        select: {
+          id: true,
+          index: true
         }
       }
-    });
-  };
+    }
+  });
+
+  console.log("🧾 [DEBUG] Tasks with assignee info:", JSON.stringify(tasks, null, 2));
+
+  return tasks;
+};
+
 
 export {
   createTask,
