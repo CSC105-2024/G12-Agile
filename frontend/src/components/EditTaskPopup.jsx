@@ -1,92 +1,214 @@
-import { useEffect, useState } from "react";
+import { Dialog } from "@headlessui/react";
+import { X } from "lucide-react";
+import { useState, useEffect } from "react";
 
-const MemberModal = ({ open, onClose, members, setMembers }) => {
-  const [tempMembers, setTempMembers] = useState([]);
+export default function EditTaskPopup({ task, onSave, onClose, sprints = [] }) {
+  const [taskName, setTaskName] = useState("");
+  const [description, setDescription] = useState("");
+  const [assignee, setAssignee] = useState("");
+  const [point, setPoint] = useState("");
+  const [sprint, setSprint] = useState("");
+  const [status, setStatus] = useState("Not started");
 
+  const [errors, setErrors] = useState({});
   useEffect(() => {
-    if (open) {
-      setTempMembers(members); 
+    if (task) {
+      setTaskName(task.name || "");
+      setDescription(task.description || "");
+      setAssignee(task.assignee?.email || "");
+      setPoint(task.point !== undefined ? task.point : "");
+      setSprint(task.sprint?.id || task.sprintId || "");
+      setStatus(task.status || "NotStarted");
+      setErrors({});
     }
-  }, [open, members]);
+  }, [task]);
 
-  const handleAdd = () => {
-    const input = document.getElementById("newMemberInput");
-    const newMember = input ? input.value.trim() : "";
-    if (newMember && !tempMembers.includes(newMember)) {
-      setTempMembers([...tempMembers, newMember]);
-      input.value = "";
-    }
-  };
-
-  const handleRemove = (member) => {
-    setTempMembers(tempMembers.filter((m) => m !== member));
-  };
-
+  // Validation
   const handleSave = () => {
-    setMembers(tempMembers);
-    onClose();
-  };
+    const newErrors = {};
 
-  const handleCancel = () => {
-    onClose();
-  };
+    if (!taskName.trim()) newErrors.taskName = "Task name is required";
+    if (!description.trim())
+      newErrors.description = "Task description is required";
+    if (point === "" || isNaN(point)) newErrors.point = "Point is required";
+    if (sprint === "" || isNaN(sprint))
+      newErrors.sprint = "In Sprint is required";
+    if (!status.trim()) newErrors.status = "Status is required";
 
-  if (!open) return null;
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    const updatedTask = {
+      ...task,
+      name: taskName,
+      description,
+      point: Number(point),
+      sprint: Number(sprint),
+      status,
+      assignee: assignee.trim(),
+    };
+    console.log("📦 Submitting Updated Task:", updatedTask);
+    if (typeof onSave === "function") {
+      onSave(updatedTask);
+    }
+    if (typeof onClose === "function") {
+      onClose();
+    }
+  };
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
-      <div className="bg-white rounded-2xl w-[500px] max-h-[80vh] overflow-y-auto shadow-lg p-6 relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-        <h2 className="text-xl font-bold text-center font-poppins bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent mb-6">
-          Team Members
-        </h2>
+    <Dialog open={true} onClose={onClose} className="fixed inset-0 z-50">
+      {/* Overlay */}
+      <div className="fixed inset-0 bg-black/30" />
 
-        <div className="flex gap-2">
-          <input
-            type="text"
-            id="newMemberInput"
-            placeholder="Add member userId"
-            className="text-gray-600 flex-1 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-purple-500"
-          />
+      {/* Content */}
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <div className="bg-white rounded-[40px] p-6 w-full max-w-lg shadow-lg relative">
+          {/* Close Button */}
           <button
-            onClick={handleAdd}
-            className="bg-gradient-to-r from-[#3F2B96] to-[#A044FF] text-white px-4 py-1 rounded-lg font-semibold font-poppins hover:opacity-90"
+            onClick={onClose}
+            type="button"
+            className="absolute top-6 right-6 text-gray-500"
           >
-            Add
+            <X size={32} />
           </button>
-        </div>
 
-        <ul className="space-y-2 mt-4 font-poppins text-gray-600 text-sm">
-          {tempMembers.map((member, idx) => (
-            <li key={idx} className="flex justify-between items-center bg-gray-100 px-3 py-2 rounded-md">
-              <span>{member}</span>
-              <button
-                onClick={() => handleRemove(member)}
-                className="text-gray-500 hover:text-gray-700 text-lg"
-              >
-                &times;
-              </button>
-            </li>
-          ))}
-        </ul>
+          {/* Title */}
+          <h3 className="text-2xl text-center mt-3 mb-5 font-poppins bg-gradient-to-r from-[#693F85] to-[#B26BE1] bg-clip-text text-transparent font-bold">
+            Edit Task
+          </h3>
 
-        <div className="mt-6 flex justify-end gap-3">
-          <button
-            className="font-semibold border border-[#7825D1] bg-[#7947F5] hover:opacity-90 text-white font-poppins px-8 py-1 rounded-lg shadow"
-            onClick={handleSave}
-          >
-            Save
-          </button>
-          <button
-            onClick={handleCancel}
-            className="border border-[#BBB4B4] font-semibold text-[#6838DE] hover:bg-gray-100 font-poppins px-8 py-1 rounded-lg shadow"
-          >
-            Cancel
-          </button>
+          <div className="space-y-6">
+            {/* Task Name */}
+            <div>
+              <label className="block text-lg font-poppins font-semibold text-gray-500 mb-2">
+                Task name
+              </label>
+              <input
+                type="text"
+                value={taskName}
+                onChange={(e) => setTaskName(e.target.value)}
+                className="w-full border-2 border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-purple-400"
+              />
+              {errors.taskName && (
+                <p className="text-red-500 text-sm mt-1">{errors.taskName}</p>
+              )}
+            </div>
+
+            {/* Task Description */}
+            <div>
+              <label className="block text-lg font-poppins font-semibold text-gray-500 mb-2">
+                Task description
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                className="w-full border-2 border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-purple-400"
+              />
+              {errors.description && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description}
+                </p>
+              )}
+            </div>
+
+            {/* Assignee */}
+            <div>
+              <label className="block text-lg text-poppins font-semibold text-gray-500 mb-2">
+                Assignee
+              </label>
+              <input
+                type="text"
+                value={assignee}
+                onChange={(e) => setAssignee(e.target.value)}
+                className="w-full border-2 border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-purple-400"
+              />
+            </div>
+
+            {/* Field Group: Point, In Sprint, Status */}
+            <div className="flex gap-4">
+              {/* Point */}
+              <div className="flex-1">
+                <label className="block text-lg font-poppins font-semibold text-gray-500 mb-2">
+                  Point
+                </label>
+                <input
+                  type="number"
+                  value={point}
+                  onChange={(e) => setPoint(e.target.value)}
+                  className="w-full border-2 border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                />
+                {errors.point && (
+                  <p className="text-red-500 text-sm mt-1">{errors.point}</p>
+                )}
+              </div>
+
+              {/* In Sprint */}
+              <div className="flex-1">
+                <label className="block text-lg font-poppins font-semibold text-gray-500 mb-2">
+                  In Sprint
+                </label>
+                <select
+                  value={sprint}
+                  onChange={(e) => setSprint(e.target.value)}
+                  className="w-full border-2 border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 appearance-none"
+                >
+                  <option value="">Select In Sprint</option>
+                  {sprints.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+
+                {errors.sprint && (
+                  <p className="text-red-500 text-sm mt-1">{errors.sprint}</p>
+                )}
+              </div>
+
+              {/* Status */}
+              <div className="flex-1">
+                <label className="block font-poppins text-lg font-semibold text-gray-500 mb-2">
+                  Status
+                </label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full border-2 border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 appearance-none"
+                >
+                  <option value="NotStarted">Not started</option>
+                  <option value="InProgress">In progress</option>
+                  <option value="Completed">Completed</option>
+                </select>
+                {errors.status && (
+                  <p className="text-red-500 text-sm mt-1">{errors.status}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Save / Cancel Buttons */}
+          <div className="flex justify-end gap-4 mt-8">
+            <button
+              onClick={handleSave}
+              type="button"
+              className="px-8 py-2 border border-[#7825D1] bg-[#7947F5] text-white rounded-xl font-semibold hover:opacity-90"
+            >
+              Save
+            </button>
+            <button
+              onClick={onClose}
+              type="button"
+              className="px-6 py-2 border border-[#BBB4B4]  text-[#6838DE] rounded-xl font-semibold hover:bg-gray-100"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </Dialog>
   );
-};
-
-export default MemberModal;
+}

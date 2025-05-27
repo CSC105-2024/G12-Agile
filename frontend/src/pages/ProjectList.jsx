@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; 
+import { Link,useNavigate } from "react-router-dom"; 
 import ProjectTable from "../components/ProjectTable";
 import Pagination from "../components/Pagination";
 import CreateProjectModal from "../components/CreateProjectModal";
@@ -12,6 +12,7 @@ import axiosInstance from "../utils/axiosInstance";
 import { projectApi } from "../api/projectApi";
 
 const ProjectList = () => {
+  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -108,6 +109,16 @@ const ProjectList = () => {
     setSelectedProject(project);
     setMembers(project.memberEmails || []);
     setOpenModal(true);
+  };
+  
+  const handleProjectClick = (project) => {
+    if (!project.id) {
+      console.error("❌ Not found project.id:", project);
+      return;
+    }
+    navigate(`/projects/${project.id}`, {
+      state: { from: "projectlist" },
+    });
   };
 
   const handleSaveProject = async (updatedProject) => {
@@ -230,6 +241,7 @@ const ProjectList = () => {
           projects={currentProjects}
           getStatusColor={getStatusColor}
           handleEditClick={handleEditClick}
+          handleProjectClick={handleProjectClick}
         />
       </div>
 

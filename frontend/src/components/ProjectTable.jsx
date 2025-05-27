@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import EditIcon from "../image/edit-246.png";
 
-const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
+const ProjectTable = ({ projects, getStatusColor, handleEditClick, }) => {
   const getDaysLeft = (endDate) => {
     const today = new Date();
     const end = new Date(endDate);
@@ -18,11 +18,12 @@ const ProjectTable = ({ projects, getStatusColor, handleEditClick }) => {
   };
 
   const navigate = useNavigate();
-
   const handleProjectClick = (project) => {
-    navigate('/projectdetail', { state: { from: 'projectlist', projectName: project.name } });
+    navigate(`/projects/${project.id}`, {
+      state: { from: 'projectlist' } 
+    });
   };
-
+  
   return (
     <div className="mx-9 mt-6">
       <div className="rounded-xl border border-gray-300 shadow-sm">
